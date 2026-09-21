@@ -1714,6 +1714,7 @@ mod tests {
 
     // -- Encrypted upload lifecycle -------------------------------------------
 
+    #[cfg(feature = "encryption")]
     fn new_encrypted_store() -> (PersistentStore, tempfile::TempDir) {
         let tmp = tempfile::tempdir().unwrap();
         let blob_root = tmp.path().join("blobs");
@@ -1726,6 +1727,7 @@ mod tests {
         (store, tmp)
     }
 
+    #[cfg(feature = "encryption")]
     #[test]
     fn upload_lifecycle_encrypted() {
         let (s, _d) = new_encrypted_store();
@@ -1755,6 +1757,7 @@ mod tests {
         assert!(raw_disk.len() > 16, "ciphertext should include tag overhead");
     }
 
+    #[cfg(feature = "encryption")]
     #[test]
     fn upload_encrypted_wrong_digest_rejected() {
         let (s, _d) = new_encrypted_store();

@@ -1702,6 +1702,7 @@ mod tests {
         assert!(result.is_err());
     }
 
+    #[cfg(feature = "encryption")]
     #[test]
     fn upload_evict_expired() {
         let (s, _d) = new_store();

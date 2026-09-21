@@ -11,9 +11,12 @@ description = "Optional redb query accelerator for kappa-registry."
 name = "kappa_store_redb"
 path = "src/lib.rs"
 
+[features]
+default = ["encryption"]
+encryption = ["kappa-core/encryption"]
+
 [dependencies]
-kappa-core = { workspace = true }
-rekindle-aead = { workspace = true }
+kappa-core = { workspace = true, default-features = false }
 redb = { workspace = true }
 blake3 = { workspace = true }
 hex = { workspace = true }

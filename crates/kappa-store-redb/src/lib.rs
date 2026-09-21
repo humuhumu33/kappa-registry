@@ -929,6 +929,11 @@ impl KappaStore for PersistentStore {
                 if let Some(parent) = blob_path.parent() {
                     std::fs::create_dir_all(parent).map_err(StoreError::Io)?;
                 }
+                // Data before name: after a power loss the blob must not
+                // exist under its address with bytes that never reached disk.
+                if self.fsync {
+                    std::fs::File::open(&ct_tmp).and_then(|f| f.sync_all()).map_err(StoreError::Io)?;
+                }
                 std::fs::rename(&ct_tmp, &blob_path).map_err(StoreError::Io)?;
                 if self.fsync {
                     if let Some(p) = blob_path.parent() {
@@ -1006,6 +1011,11 @@ impl KappaStore for PersistentStore {
             } else {
                 if let Some(parent) = blob_path.parent() {
                     std::fs::create_dir_all(parent).map_err(StoreError::Io)?;
+                }
+                // Data before name: after a power loss the blob must not
+                // exist under its address with bytes that never reached disk.
+                if self.fsync {
+                    std::fs::File::open(&staging_path).and_then(|f| f.sync_all()).map_err(StoreError::Io)?;
                 }
                 std::fs::rename(&staging_path, &blob_path).map_err(StoreError::Io)?;
                 if self.fsync {
